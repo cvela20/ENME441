@@ -12,7 +12,9 @@ p2 = 27
 f = 0.2
 phi = math.pi/11
 
-GPIO.setup(p, GPIO.OUT, initial=0)
+GPIO.setup(p1, GPIO.OUT, initial=0)
+GPIO.setup(p2, GPIO.OUT, initial=0)
+
 tstart = time.time()
 pwm1 = GPIO.PWM(p1, 500)
 pwm2 = GPIO.PWM(p2, 500)
