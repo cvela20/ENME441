@@ -2,6 +2,7 @@
 
 import RPi.GPIO as GPIO
 import math
+import time
 from time import sleep
 
 GPIO.setmode(GPIO.BCM)
@@ -16,11 +17,11 @@ pwm.start(0)
 try:
 	while True:
 		t = time.time() - tstart
-		B = math.sin(2*(math.pi())*f*t)**2
+		B = math.sin(2*(math.pi)*f*t)**2
 		pwm.ChangeDutyCycle(B*100)
 
 except KeyboardInterrupt:
-	pring('\nExiting')
+	print('\nExiting')
 except Exception as e:
 	print('\ne')
 
