@@ -15,7 +15,7 @@ def calcB(x, t, f, phase):
 pins = list(range(2,12))
 f = 0.2
 phase = math.pi/11
-GPIO.setup(pins, GPIO.OUT, inital = 0)
+GPIO.setup(pins, GPIO.OUT, initial = 0)
 
 pwms = [GPIO.PWM(p, 500) for p in pins]
 tstart = time.time()
