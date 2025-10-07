@@ -6,7 +6,7 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
 
 # === adjust to match your wiring: 12 BCM pins ===
-pins = list(range(2, 14))          # 2..13 gives 12 LEDs; change if needed
+pins = list(range(2, 12))          # 2..13 gives 12 LEDs; change if needed
 
 PWM_FREQ = 500                      # Hz (carrier)
 f = 0.2                             # Hz (brightness envelope)
