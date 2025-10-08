@@ -11,7 +11,7 @@ def calcB(x, t, f, phase, direction):
 	B = math.sin((2*(math.pi)*f*t)-(direction*x*phase))**2
 	return B
 
-def changeDirection(direction):
+def changeDirection(pin):
 	direction[0] *= -1
 
 pins = list(range(2,12))
