@@ -32,7 +32,7 @@ try:
 	while True:
 		t = time.time() - tstart
 		for x, pwm in enumerate(pwms):
-		    B = calcB(x, t, f, phase, direction)
+		    B = calcB(x, t, f, phase, direction[0])
 		    pwm.ChangeDutyCycle(B*100)
 		
 
