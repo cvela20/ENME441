@@ -8,7 +8,7 @@ GPIO.setup(dataPin, GPIO.OUT)
 GPIO.setup(latchPin, GPIO.OUT, initial=0) # start latch & clock low
 GPIO.setup(clockPin, GPIO.OUT, initial=0)
 
-pattern = 0b01100110 # pattern to display
+pattern = 0b01110111 # pattern to display
 
 for i in range(8):
 	GPIO.output(dataPin, pattern & (1<<i))
