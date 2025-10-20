@@ -1,12 +1,22 @@
 from shifter import Shifter
 import RPi.GPIO as GPIO
-import time
+import time, random
 
+sr = Shifter(serialPin=23, clockPin=25, latchPin=24)
+position = 0
 try:
-    sr = Shifter(serialPin=23, clockPin=25, latchPin=24)
-    sr.shiftByte(0b01100110)  # light your pattern
     while True:
-        time.sleep(1)          # keep outputs on
+        led = 1 << position 
+        sr.shiftByte(position)
+        time.sleep(0.05)
+
+        step = random.choice([-1,1])
+        position += step
+        if position < 0:
+        	position = 0
+        elif position > 7:
+        	position = 7
+
 except KeyboardInterrupt:
     pass
 finally:
