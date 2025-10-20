@@ -18,19 +18,19 @@ try:
 		s2 = GPIO.input(27)
 		s3 = GPIO.input(22)
 
-	if s1 == True:
-		bug.start()
-	elif s1 == False:
-		bug.stop()
+		if s1 == True:
+			bug.start()
+		elif s1 == False:
+			bug.stop()
 
-	if s2 != previous_s2:
-		bug.isWrapOn = not bug.isWrapOn
-		previous_s2 = s2 
+		if s2 != previous_s2:
+			bug.isWrapOn = not bug.isWrapOn
+			previous_s2 = s2 
 
 
-	if s3 == True:
-		bug.timestep = dt/3.0
-		dt /= 3.0
+		if s3 == True:
+			bug.timestep = dt/3.0
+			dt /= 3.0
 
 except KeyboardInterrupt:
 	pass
