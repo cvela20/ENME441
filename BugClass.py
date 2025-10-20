@@ -23,9 +23,7 @@ class Bug:
 						self.x = 1
 					elif self.x > 7:
 						self.x = 6
-						
-		except KeyboardInterrupt:
-			self.stop()
+
 
 	def stop(self):
 		self.__shifter.shiftByte(0)
