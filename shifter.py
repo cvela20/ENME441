@@ -14,14 +14,14 @@ class Shifter:
 		GPIO.setup(self.latchPin, GPIO.OUT, initial=0) # start latch & clock low
 		GPIO.setup(self.clockPin, GPIO.OUT, initial=0)
 
-	def _ping(self, pin):
-		GPIO.output(pin,1)
+	def __ping(self, p):
+		GPIO.output(p,1)
 		time.sleep(0)
-		GPIO.output(pin,0)
+		GPIO.output(p,0)
 
-	def shiftByte(b):
+	def shiftByte(self, b):
 		for i in range(8):
 			GPIO.output(self.dataPin, b & (1<<i))
-			ping(self.clockpin)
-		ping(self.latchpin)
+			self.__ping(self.clockpin)
+		self.__ping(self.latchpin)
 
