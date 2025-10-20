@@ -32,7 +32,7 @@ try:
 		bug.timestep = dt/3.0
 		dt /= 3.0
 
-except KeyboradInterrupt:
+except KeyboardInterrupt:
 	pass
 finally:
 	GPIO.cleanup()
