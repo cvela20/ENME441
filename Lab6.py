@@ -7,7 +7,7 @@ position = 0
 try:
     while True:
         led = 1 << position 
-        sr.shiftByte(position)
+        sr.shiftByte(led)
         time.sleep(0.05)
 
         step = random.choice([-1,1])
