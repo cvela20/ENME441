@@ -24,8 +24,8 @@ def shiftByte(b):
 
 
 try:
- shiftByte(0b01100110)
- while 1: pass
- 
+	shiftByte(0b01100110)
+	while 1: pass
+
 except:
- GPIO.cleanup()
+	GPIO.cleanup()
