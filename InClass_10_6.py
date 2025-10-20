@@ -24,8 +24,10 @@ def shiftByte(b):
 
 
 try:
-	shiftByte(0b01100110)
-	while 1: pass
+	while 1:
+		for i in range(2**8):
+			shiftByte(i)
+			time.sleep(0.5)
 
 except:
 	GPIO.cleanup()
