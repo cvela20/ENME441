@@ -12,21 +12,20 @@ class Bug:
 
 	def start(self):
 		self.__running = True
-		while self.__running == True:
-			self.__shifter.shiftByte(1 << self.x)
-			time.sleep(self.timestep)
-			self.x += random.choice([-1,1])
+		self.__shifter.shiftByte(1 << self.x)
+		time.sleep(self.timestep)
+		self.x += random.choice([-1,1])
 
-			if self.isWrapOn == True:
-				self.x %= 8
-			else:
-				if self.x < 0:
-					self.x = 1
-				elif self.x > 7:
-					self.x = 6
+		if self.isWrapOn == True:
+			self.x %= 8
+		else:
+			if self.x < 0:
+				self.x = 1
+			elif self.x > 7:
+				self.x = 6
 		
 
 	def stop(self):
-		self.__running = False
+		self.running = False
 		self.__shifter.shiftByte(0)
 
