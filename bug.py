@@ -3,9 +3,9 @@ import RPi.GPIO as GPIO
 import time, random
 
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(17, GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
-GPIO.setup(27, GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
-GPIO.setup(22, GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
+GPIO.setup(17, GPIO.IN, pull_up_down = GPIO.PUD_UP)
+GPIO.setup(27, GPIO.IN, pull_up_down = GPIO.PUD_UP)
+GPIO.setup(22, GPIO.IN, pull_up_down = GPIO.PUD_UP)
 
 dt = 0.1
 bug = Bug(timestep=dt, x=3, isWrapOn=False)
@@ -18,9 +18,9 @@ try:
 		s2 = GPIO.input(27)
 		s3 = GPIO.input(22)
 
-		if s1 == True:
+		if s1 == 1:
 			bug.start()
-		elif s1 == False:
+		elif s1 == 0:
 			bug.stop()
 
 		if s2 != previous_s2:
