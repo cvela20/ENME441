@@ -2,9 +2,11 @@ from BugClass import Bug
 import RPi.GPIO as GPIO
 import time, random
 
+GPIO.setmode(GPIO.BCM)
 GPIO.setup(17, GPIO.IN, pull_up_down = GPIO.PUD_UP)
 GPIO.setup(27, GPIO.IN, pull_up_down = GPIO.PUD_UP)
 GPIO.setup(22, GPIO.IN, pull_up_down = GPIO.PUD_UP)
+
 dt = 0.1
 bug = Bug(timestep=dt, x=3, isWrapOn=False)
 s2 = 0
