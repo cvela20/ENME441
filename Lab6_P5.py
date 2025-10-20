@@ -1,4 +1,4 @@
-from bug import Bug
+from BugClass import Bug
 import RPi.GPIO as GPIO
 import time
 
