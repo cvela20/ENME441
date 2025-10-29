@@ -33,27 +33,27 @@ def parsePOSTdata(data):
 def web_page():
     html = f"""
     <html>
-<head>
-<title>LED Brightness Control</title>
-</head>
-<body>
+    <head>
+    <title>LED Brightness Control</title>
+    </head>
+    <body>
 
-  <p1>Brightness Level:</p1>
-  <form action="/cgi-bin/led_control.py" method="POST">
-  <input type="range" name="slider1" min="0" max="100" value="25">
+      <p1>Brightness Level:</p1>
+      <form action="/cgi-bin/led_control.py" method="POST">
+      <input type="range" name="slider1" min="0" max="100" value="25">
 
-  <p>Select LED:</p>
-  <input type="radio" name="option" value="1" checked> LED 1 ({brightness[0]}%)<br>
-  <input type="radio" name="option" value="2"> LED 2 ({brightness[1]}%)<br>
-  <input type="radio" name="option" value="3"> LED 3 ({brightness[2]}%)<br>
+      <p>Select LED:</p>
+      <input type="radio" name="option" value="1" checked> LED 1 ({brightness[0]}%)<br>
+      <input type="radio" name="option" value="2"> LED 2 ({brightness[1]}%)<br>
+      <input type="radio" name="option" value="3"> LED 3 ({brightness[2]}%)<br>
 
-  <input type="submit" value="Change Brightness">
-  </form>
+      <input type="submit" value="Change Brightness">
+      </form>
 
-</body>
-</html>
-"""
-return html.encode('utf-8')
+    </body>
+    </html>
+    """
+    return html.encode('utf-8')
 
 def serve_web_page():
     while True:
