@@ -7,6 +7,6 @@ Beta = theta2 - theta1
 if Beta > 0:
 	phi = (180-Beta)/2
 elif Beta < 0 :
-	phi = Beta/2
+	phi = 180 - (180-Beta)/2
 
 print(f"Beta = {Beta} Phi = {phi}")
