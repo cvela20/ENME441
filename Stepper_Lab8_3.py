@@ -89,7 +89,7 @@ class Stepper:
     # Move to an absolute angle taking the shortest possible path:
     def goAngle(self, angle):
         # Ensure target is in [0,360)
-        a = a % 360.0
+        a = angle % 360.0
         with self.angle.get_lock():
             cur = self.angle.value
         # Minimal signed delta in (-180, 180]
