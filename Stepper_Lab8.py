@@ -99,7 +99,7 @@ class Stepper:
 # Example use:
 
 if __name__ == '__main__':
-    Stepper.shifter_outputs = multiprocessing.Value('I', 0)
+    Stepper.shifter_outputs = multiprocessing.Value('i')
 
     s = Shifter(data=16,latch=20,clock=21)   # set up Shifter
 
