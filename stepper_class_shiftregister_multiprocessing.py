@@ -55,14 +55,20 @@ class Stepper:
 
     # Move a single +/-1 step in the motor sequence:
     def __step(self, dir):
-        self.step_state += dir    # increment/decrement the step
-        self.step_state %= 8      # ensure result stays in [0,7]
-        mask = 0b1111 << self.shifter_bit_start
-        Stepper.shifter_outputs &= ~mask
-        Stepper.shifter_outputs |= Stepper.seq[self.step_state] << self.shifter_bit_start
-        self.s.shiftByte(Stepper.shifter_outputs)
-        self.angle += dir/Stepper.steps_per_degree
-        self.angle %= 360         # limit to [0,359.9+] range
+        self.step_state = (self.step_state + dir) % 8
+        nibble    = Stepper.seq[self.step_state]
+        start_bit = self.shifter_bit_start
+        mask      = 0b1111 << start_bit
+    
+        # Use the Value's internal lock so all processes coordinate here
+        with Stepper.shifter_outputs.get_lock():
+            curr = Stepper.shifter_outputs.value
+            curr &= ~mask                     # clear only my 4 bits
+            curr |= (nibble << start_bit)     # set only my 4 bits
+            Stepper.shifter_outputs.value = curr
+            self.s.shiftByte(curr)            # clock it out
+    
+        self.angle = (self.angle + dir/Stepper.steps_per_degree) % 360
 
     # Move relative angle from current position:
     def __rotate(self, delta):
@@ -76,9 +82,12 @@ class Stepper:
 
     # Move relative angle from current position:
     def rotate(self, delta):
-        time.sleep(0.1)
-        p = multiprocessing.Process(target=self.__rotate, args=(delta,))
-        p.start()
+        numSteps = int(Stepper.steps_per_degree * abs(delta))
+        dir = self.__sgn(delta)
+        for s in range(numSteps):
+            self.__step(dir)
+            time.sleep(Stepper.delay/1e6)
+
 
     # Move to an absolute angle taking the shortest possible path:
     def goAngle(self, angle):
@@ -93,6 +102,7 @@ class Stepper:
 # Example use:
 
 if __name__ == '__main__':
+    Stepper.shifter_outputs = multiprocessing.Value('I', 0)  # NEW: shared 32-bit int
 
     s = Shifter(data=16,latch=20,clock=21)   # set up Shifter
 
