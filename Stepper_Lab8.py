@@ -60,7 +60,7 @@ class Stepper:
         mask = 0b1111 << self.shifter_bit_start 
         
         lock = Stepper.shifter_outputs.get_lock()
-        lock.aquire()
+        lock.acquire()
         
         curr = Stepper.shifter_outputs.value                     
         curr &= ~mask                                            
@@ -147,4 +147,5 @@ if __name__ == '__main__':
     except:
 
         print('\nend')
+
 
