@@ -1,3 +1,6 @@
+# Lab 8 Part 3 Stepper Motor
+# Cameron Vela, Vraj Patel, Lucas Billington
+
 # stepper_class_shiftregister_multiprocessing.py
 #
 # Stepper class
@@ -41,7 +44,7 @@ class Stepper:
 
     def __init__(self, shifter, lock):
         self.s = shifter           # shift register
-        self.angle = multiprocessing.Value('d', 0) 
+        self.angle = multiprocessing.Value('d') 
         self.step_state = 0        # track position in sequence
         self.shifter_bit_start = 4*Stepper.num_steppers  # starting bit position
         self.lock = lock           # multiprocessing lock
@@ -114,7 +117,6 @@ class Stepper:
         alock.release()
 
 
-# Example use:
 
 if __name__ == '__main__':
     Stepper.shifter_outputs = multiprocessing.Value('i')
@@ -130,20 +132,20 @@ if __name__ == '__main__':
     m1 = Stepper(s, lock1)
     m2 = Stepper(s, lock2)
 
-    # Zero the motors:
+   # Test for part 3 running both motors with goAngle at same time
     m1.zero()
     m2.zero()
 
-    # Move as desired, with eacg step occuring as soon as the previous 
-    # step ends:
+   
     m1.goAngle(90)
     m1.goAngle(-45)
+
     m2.goAngle(-90)
     m2.goAngle(45)
+
     m1.goAngle(-135)
     m1.goAngle(135)
     m1.goAngle(0)
-    m2.goAngle(0)
 
     # If separate multiprocessing.lock objects are used, the second motor
     # will run in parallel with the first motor:
@@ -158,7 +160,3 @@ if __name__ == '__main__':
     except:
 
         print('\nend')
-
-
-
-
