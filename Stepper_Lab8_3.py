@@ -41,7 +41,7 @@ class Stepper:
 
     def __init__(self, shifter, lock):
         self.s = shifter           # shift register
-        self.angle = multiprocessing.Value('d', 0.0)
+        self.angle = multiprocessing.Value('a') 
         self.step_state = 0        # track position in sequence
         self.shifter_bit_start = 4*Stepper.num_steppers  # starting bit position
         self.lock = lock           # multiprocessing lock
@@ -58,12 +58,12 @@ class Stepper:
         self.step_state += dir    # increment/decrement the step
         self.step_state %= 8      # ensure result stays in [0,7]
         mask = 0b1111 << self.shifter_bit_start
-        with Stepper.shifter_outputs.get_lock():                     #
-            curr = Stepper.shifter_outputs.value                     # 
-            curr &= ~mask                                            # 
+        with Stepper.shifter_outputs.get_lock():                     
+            curr = Stepper.shifter_outputs.value                      
+            curr &= ~mask                                             
             curr |= (Stepper.seq[self.step_state] << self.shifter_bit_start)
-            Stepper.shifter_outputs.value = curr                     # 
-            self.s.shiftByte(curr)                                   #
+            Stepper.shifter_outputs.value = curr                      
+            self.s.shiftByte(curr)                                   
 
         with self.angle.get_lock():
             self.angle.value = (self.angle.value + dir/Stepper.steps_per_degree) % 360.0
@@ -103,7 +103,7 @@ class Stepper:
 # Example use:
 
 if __name__ == '__main__':
-    Stepper.shifter_outputs = multiprocessing.Value('I', 0)
+    Stepper.shifter_outputs = multiprocessing.Value('i')
 
     s = Shifter(data=16,latch=20,clock=21)   # set up Shifter
 
@@ -144,3 +144,4 @@ if __name__ == '__main__':
     except:
 
         print('\nend')
+
