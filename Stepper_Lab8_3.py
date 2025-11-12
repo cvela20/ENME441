@@ -132,6 +132,7 @@ if __name__ == '__main__':
     m1.goAngle(-135)
     m1.goAngle(135)
     m1.goAngle(0)
+    m2.goAngle(0)
 
     # If separate multiprocessing.lock objects are used, the second motor
     # will run in parallel with the first motor:
