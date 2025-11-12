@@ -57,8 +57,9 @@ class Stepper:
    def __step(self, dir):
         self.step_state += dir    # increment/decrement the step
         self.step_state %= 8      # ensure result stays in [0,7]
-        Stepper.shifter_outputs |= 0b1111<<self.shifter_bit_start
-        Stepper.shifter_outputs &= Stepper.seq[self.step_state]<<self.shifter_bit_start
+        mask = 0b1111 << self.shifter_bit_start
+        Stepper.shifter_outputs &= ~mask
+        Stepper.shifter_outputs |= Stepper.seq[self.step_state] << self.shifter_bit_start
         self.s.shiftByte(Stepper.shifter_outputs)
         self.angle += dir/Stepper.steps_per_degree
         self.angle %= 360         # limit to [0,359.9+] range
@@ -97,11 +98,12 @@ if __name__ == '__main__':
 
     # Use multiprocessing.Lock() to prevent motors from trying to 
     # execute multiple operations at the same time:
-    lock = multiprocessing.Lock()
+    lock1 = multiprocessing.Lock()
+    lock2 = multiprocessing.Lock()
 
     # Instantiate 2 Steppers:
-    m1 = Stepper(s, lock)
-    m2 = Stepper(s, lock)
+    m1 = Stepper(s, lock1)
+    m2 = Stepper(s, lock2)
 
     # Zero the motors:
     m1.zero()
