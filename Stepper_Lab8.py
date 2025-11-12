@@ -1,3 +1,5 @@
+# Lab 8, Cameron Vela, Vraj Patel, Lucas Billington
+
 # stepper_class_shiftregister_multiprocessing.py
 #
 # Stepper class
@@ -59,16 +61,16 @@ class Stepper:
         self.step_state %= 8      # ensure result stays in [0,7]
         mask = 0b1111 << self.shifter_bit_start 
         
-        lock = Stepper.shifter_outputs.get_lock()
+        lock = Stepper.shifter_outputs.get_lock() # Wait for lock to be available and aquire
         lock.acquire()
         
-        curr = Stepper.shifter_outputs.value                     
-        curr &= ~mask                                            
-        curr |= (Stepper.seq[self.step_state] << self.shifter_bit_start)
-        Stepper.shifter_outputs.value = curr                     
-        self.s.shiftByte(curr)
+        current = Stepper.shifter_outputs.value         # Assigns current bits to a variable to be manipulated without impacting the actual values yet           
+        current &= ~mask                                # Prevents overwriting of second motor bits            
+        current |= (Stepper.seq[self.step_state] << self.shifter_bit_start) # Inserts new 4 bits into correct position
+        Stepper.shifter_outputs.value = current         # Assigns the actual bit values to their new values after they have been correctly changed            
+        self.s.shiftByte(current)
         
-        lock.release()
+        lock.release() # Release lock
         
 
         self.angle += dir/Stepper.steps_per_degree
@@ -105,13 +107,13 @@ class Stepper:
 # Example use:
 
 if __name__ == '__main__':
-    Stepper.shifter_outputs = multiprocessing.Value('i')
+    Stepper.shifter_outputs = multiprocessing.Value('i') # Defines outputs as shared memory
 
     s = Shifter(data=16,latch=20,clock=21)   # set up Shifter
 
     # Use multiprocessing.Lock() to prevent motors from trying to 
     # execute multiple operations at the same time:
-    lock1 = multiprocessing.Lock()
+    lock1 = multiprocessing.Lock() # Give each stepper motor its own lock
     lock2 = multiprocessing.Lock()
 
     # Instantiate 2 Steppers:
@@ -147,5 +149,6 @@ if __name__ == '__main__':
     except:
 
         print('\nend')
+
 
 
