@@ -53,20 +53,28 @@ class Stepper:
         if x == 0: return(0)
         else: return(int(abs(x)/x))
 
-    # Move a single +/-1 step in the motor sequence:
+   # Move a single +/-1 step in the motor sequence:
     def __step(self, dir):
         self.step_state += dir    # increment/decrement the step
         self.step_state %= 8      # ensure result stays in [0,7]
-        mask = 0b1111 << self.shifter_bit_start
-        with Stepper.shifter_outputs.get_lock():                     
-            curr = Stepper.shifter_outputs.value                      
-            curr &= ~mask                                             
-            curr |= (Stepper.seq[self.step_state] << self.shifter_bit_start)
-            Stepper.shifter_outputs.value = curr                      
-            self.s.shiftByte(curr)                                   
+        mask = 0b1111 << self.shifter_bit_start 
+        
+        slock = Stepper.shifter_outputs.get_lock() # Wait for lock to be available and aquire
+        slock.acquire()
+        
+        current = Stepper.shifter_outputs.value         # Assigns current bits to a variable to be manipulated without impacting the actual values yet           
+        current &= ~mask                                # Prevents overwriting of second motor bits            
+        current |= (Stepper.seq[self.step_state] << self.shifter_bit_start) # Inserts new 4 bits into correct position
+        Stepper.shifter_outputs.value = current         # Assigns the actual bit values to their new values after they have been correctly changed            
+        self.s.shiftByte(current)
+        
+        slock.release() # Release lock
 
-        with self.angle.get_lock():
-            self.angle.value = (self.angle.value + dir/Stepper.steps_per_degree) % 360.0
+        alock = self.angle.get_lock() # Acquire lock for angle
+        alock.acquire()
+        self.angle.value = (self.angle.value + dir/Stepper.steps_per_degree) % 360
+        alock.release() # Release lock for angle after value is changed depending on step
+        
 
     # Move relative angle from current position:
     def __rotate(self, delta):
@@ -88,16 +96,22 @@ class Stepper:
 
     # Move to an absolute angle taking the shortest possible path:
     def goAngle(self, angle):
-        with self.angle.get_lock():
-            currenta = self.angle.value
+        alock = self.angle.get_lock()
+        
+        alock.acquire()
+        currenta = self.angle.value
+        alock.release()
+        
         diff = ((angle - currenta + 180) % 360) - 180
         self.rotate(diff)
 
 
     # Set the motor zero point
     def zero(self):
-        with self.angle.get_lock():
-            self.angle.value = 0.0
+        alock = self.angle.get_lock()
+        alock.acquire()
+        self.angle.value = 0.0
+        alock.release()
 
 
 # Example use:
@@ -144,4 +158,5 @@ if __name__ == '__main__':
     except:
 
         print('\nend')
+
 
