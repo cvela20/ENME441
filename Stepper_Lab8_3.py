@@ -41,7 +41,7 @@ class Stepper:
 
     def __init__(self, shifter, lock):
         self.s = shifter           # shift register
-        self.angle = multiprocessing.Value('a') 
+        self.angle = multiprocessing.Value('a', 0) 
         self.step_state = 0        # track position in sequence
         self.shifter_bit_start = 4*Stepper.num_steppers  # starting bit position
         self.lock = lock           # multiprocessing lock
@@ -158,5 +158,6 @@ if __name__ == '__main__':
     except:
 
         print('\nend')
+
 
 
