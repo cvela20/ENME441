@@ -55,20 +55,14 @@ class Stepper:
 
     # Move a single +/-1 step in the motor sequence:
     def __step(self, dir):
-        self.step_state = (self.step_state + dir) % 8
-        nibble    = Stepper.seq[self.step_state]
-        start_bit = self.shifter_bit_start
-        mask      = 0b1111 << start_bit
-    
-        # Use the Value's internal lock so all processes coordinate here
-        with Stepper.shifter_outputs.get_lock():
-            curr = Stepper.shifter_outputs.value
-            curr &= ~mask                     # clear only my 4 bits
-            curr |= (nibble << start_bit)     # set only my 4 bits
-            Stepper.shifter_outputs.value = curr
-            self.s.shiftByte(curr)            # clock it out
-    
-        self.angle = (self.angle + dir/Stepper.steps_per_degree) % 360
+        s self.step_state += dir    # increment/decrement the step
+        self.step_state %= 8      # ensure result stays in [0,7]
+        mask = 0b1111 << self.shifter_bit_start
+        Stepper.shifter_outputs &= ~mask
+        Stepper.shifter_outputs |= Stepper.seq[self.step_state] << self.shifter_bit_start
+        self.s.shiftByte(stepper.shifter_outputs)
+        self.angle += dir/Stepper.steps_per_degree
+        self.angle %= 360         # limit to [0,359.9+] range
 
     # Move relative angle from current position:
     def __rotate(self, delta):
