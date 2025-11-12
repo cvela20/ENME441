@@ -54,7 +54,7 @@ class Stepper:
         else: return(int(abs(x)/x))
 
     # Move a single +/-1 step in the motor sequence:
-    def __step(self, dir):
+   def __step(self, dir):
         self.step_state += dir    # increment/decrement the step
         self.step_state %= 8      # ensure result stays in [0,7]
         Stepper.shifter_outputs |= 0b1111<<self.shifter_bit_start
