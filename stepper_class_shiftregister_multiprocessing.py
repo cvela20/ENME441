@@ -72,13 +72,10 @@ class Stepper:
 
     # Move relative angle from current position:
     def __rotate(self, delta):
-        self.lock.acquire()                 # wait until the lock is available
-        numSteps = int(Stepper.steps_per_degree * abs(delta))    # find the right # of steps
-        dir = self.__sgn(delta)        # find the direction (+/-1)
-        for s in range(numSteps):      # take the steps
-            self.__step(dir)
-            time.sleep(Stepper.delay/1e6)
-        self.lock.release()
+        p = multiprocessing.Process(target=self.__rotate, args=(delta,))
+        p.daemon = True
+        p.start()
+
 
     # Move relative angle from current position:
     def rotate(self, delta):
