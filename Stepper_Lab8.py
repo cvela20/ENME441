@@ -57,13 +57,19 @@ class Stepper:
     def __step(self, dir):
         self.step_state += dir    # increment/decrement the step
         self.step_state %= 8      # ensure result stays in [0,7]
-        mask = 0b1111 << self.shifter_bit_start
-        with Stepper.shifter_outputs.get_lock():                     #
-            curr = Stepper.shifter_outputs.value                     # 
-            curr &= ~mask                                            # 
-            curr |= (Stepper.seq[self.step_state] << self.shifter_bit_start)
-            Stepper.shifter_outputs.value = curr                     # 
-            self.s.shiftByte(curr)                                   #
+        mask = 0b1111 << self.shifter_bit_start 
+        
+        lock = Stepper.shifter_ouputs.get_lock()
+        lock.aquire()
+        
+        curr = Stepper.shifter_outputs.value                     
+        curr &= ~mask                                            
+        curr |= (Stepper.seq[self.step_state] << self.shifter_bit_start)
+        Stepper.shifter_outputs.value = curr                     
+        self.s.shiftByte(curr)
+        
+        lock.release()
+        
 
         self.angle += dir/Stepper.steps_per_degree
         self.angle %= 360         # limit to [0,359.9+] range
@@ -139,4 +145,5 @@ if __name__ == '__main__':
         while True:
             pass
     except:
+
         print('\nend')
