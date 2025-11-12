@@ -12,7 +12,7 @@ DATA_PIN  = 16  # Pi BCM pin → 74HC595 SER
 LATCH_PIN = 20  # Pi BCM pin → 74HC595 RCLK (latch)
 CLOCK_PIN = 21  # Pi BCM pin → 74HC595 SRCLK (shift clock)
 
-STEP_DELAY_S = 0.12  # 1.2 ms between half-steps (tune for your setup)
+STEP_DELAY_S = 0.0012  # 1.2 ms between half-steps (tune for your setup)
 STEPS_PER_REV = 4096   # Typical for 28BYJ-48 in half-step mode
 
 # Coil order expected (A,B,C,D) must match wiring to driver channels
@@ -124,4 +124,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
