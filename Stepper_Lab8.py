@@ -59,7 +59,7 @@ class Stepper:
         self.step_state %= 8      # ensure result stays in [0,7]
         mask = 0b1111 << self.shifter_bit_start 
         
-        lock = Stepper.shifter_ouputs.get_lock()
+        lock = Stepper.shifter_outputs.get_lock()
         lock.aquire()
         
         curr = Stepper.shifter_outputs.value                     
@@ -147,3 +147,4 @@ if __name__ == '__main__':
     except:
 
         print('\nend')
+
