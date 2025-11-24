@@ -29,6 +29,8 @@ def parsePOSTdata(data):
     return data_dict
 
 def web_page(): # Creating the webpage with basic HTML for POST requests
+    global theta_deg, phi_deg, calib_theta_deg, calib_phi_deg
+
     html = """
     <html>
   <head>
@@ -220,6 +222,12 @@ def web_page(): # Creating the webpage with basic HTML for POST requests
     <!-- Calibration Section -->
     <div class="section">
       <div class="section-title">Calibration</div>
+      <p>Current Calibration:</p>
+      <p>
+        θ₀ = {calib_theta_deg:.1f}° <br>
+        φ₀ = {calib_phi_deg:.1f}°
+      </p>
+
       <button id="calibrateBtn">Set Calibration</button>
     </div>
 
@@ -330,7 +338,7 @@ def serve_web_page():
 
             elif control == "calib_theta":
                 calib_theta_deg = float(value)
-                print(f" Calibration phi set to {calib_theta_deg} deg")
+                print(f" Calibration theta set to {calib_theta_deg} deg")
                 #store as z axis roation offset
 
             elif control == "calib_phi":
