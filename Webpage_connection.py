@@ -1,22 +1,10 @@
-#Cameron Vela Lab 7 Question 1
+
 
 import socket
 from RPi import GPIO
 
 #Set up output pins and pwm signals going to output pins
 GPIO.setmode(GPIO.BCM)
-pins = [17,27,22]
-
-for p in pins:
-    GPIO.setup(p, GPIO.OUT)
-
-f = 500
-
-pwms = [GPIO.PWM(p, 500) for p in pins]
-
-for pwm in pwms:
-    pwm.start(0)
-brightness = [0, 0, 0]
 
 # Parse function from class
 def parsePOSTdata(data):
@@ -305,40 +293,45 @@ def serve_web_page():
         data_dict = parsePOSTdata(client_message)
 
         if 'control' in data_dict and 'value' in data_dict:
-            control = data_dict['control']
-            value = data_dict['value']
-            pring(f"Control: {control}, Value: {value}")
+            control = data_dict.get('control')
+            value = data_dict.get('value')
+            print(f"Control: {control}, Value: {value}")
 
             if control == "power":
                 if value =="on":
                     print(">>> Power On")
                     # Stepper power here
                 else:
-                    pring("Power Off")
+                    print("Power Off")
                     #Disable stepper power
 
-        elif control == "theta":
-            theta_deg = float(value)
-            print(f" Set horizontal angle to {theta_deg} deg")
-            # Convert theta_deg to steps and move azimuth motor
+            elif control == "theta":
+                theta_deg = float(value)
+                print(f" Set horizontal angle to {theta_deg} deg")
+                # Convert theta_deg to steps and move azimuth motor
 
-        elif control == "phi":
-            phi_deg = float(value)
-            proing(f"Set vertical angle (pji) to {phi_deg} deg")
-            # Convert phi_deg to steps and move elevation motor
+            elif control == "phi":
+                phi_deg = float(value)
+                print(f"Set vertical angle (phi) to {phi_deg} deg")
+                # Convert phi_deg to steps and move elevation motor
 
-        elif control == "calib_theta":
-            calib_theta_deg = float(value)
-            print(f" Calibration phi set to {calib_phi_deg} deg")
-            #store as z axis roation offset
+            elif control == "calib_theta":
+                calib_theta_deg = float(value)
+                print(f" Calibration phi set to {calib_theta_deg} deg")
+                #store as z axis roation offset
 
-        elif control == "launch":
-            json_url = value
-            print(f"Launch sequence requestion with JSON URL: {json_url}")
-            #Json-reading code and targeting
+            elif control == "calib_phi":
+                calib_phi_deg = float(value)
+                print(f" Calibration phi set to {calib_phi_deg} deg")
+                #store as z axis roation offset
 
-        else:
-            print("Unknown control:", control)
+            elif control == "launch":
+                json_url = value
+                print(f"Launch sequence requestion with JSON URL: {json_url}")
+                #Json-reading code and targeting
+
+            else:
+                print("Unknown control:", control)
 
         conn.send(b'HTTP/1.1 200 OK\r\n')                 
         conn.send(b'Content-Type: text/html\r\n')         
