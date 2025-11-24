@@ -32,12 +32,12 @@ def web_page(): # Creating the webpage with basic HTML for POST requests
     global theta_deg, phi_deg, calib_theta_deg, calib_phi_deg
 
     html = f"""
-    <html>
+<html>
   <head>
     <meta charset="UTF-8" />
     <title>Stepper Motor Turret Control</title>
     <style>
-      body {
+      body {{
         font-family: Arial, sans-serif;
         max-width: 650px;
         margin: 20px auto;
@@ -45,47 +45,47 @@ def web_page(): # Creating the webpage with basic HTML for POST requests
         border: 1px solid #ddd;
         border-radius: 8px;
         background: #f9f9f9;
-      }
+      }}
 
-      h1 {
+      h1 {{
         text-align: center;
         font-size: 1.4rem;
         margin-bottom: 20px;
-      }
+      }}
 
-      .section {
+      .section {{
         margin-bottom: 20px;
         padding: 10px 15px;
         background: #ffffff;
         border-radius: 6px;
         border: 1px solid #e0e0e0;
-      }
+      }}
 
-      .section-title {
+      .section-title {{
         font-weight: bold;
         margin-bottom: 8px;
-      }
+      }}
 
-      .switch-wrapper {
+      .switch-wrapper {{
         display: flex;
         align-items: center;
         gap: 10px;
-      }
+      }}
 
-      .switch {
+      .switch {{
         position: relative;
         display: inline-block;
         width: 50px;
         height: 24px;
-      }
+      }}
 
-      .switch input {
+      .switch input {{
         opacity: 0;
         width: 0;
         height: 0;
-      }
+      }}
 
-      .slider {
+      .slider {{
         position: absolute;
         cursor: pointer;
         top: 0;
@@ -95,9 +95,9 @@ def web_page(): # Creating the webpage with basic HTML for POST requests
         background-color: #ccc;
         transition: 0.2s;
         border-radius: 24px;
-      }
+      }}
 
-      .slider:before {
+      .slider:before {{
         position: absolute;
         content: "";
         height: 18px;
@@ -107,37 +107,37 @@ def web_page(): # Creating the webpage with basic HTML for POST requests
         background-color: white;
         transition: 0.2s;
         border-radius: 50%;
-      }
+      }}
 
-      input:checked + .slider {
+      input:checked + .slider {{
         background-color: #4caf50;
-      }
+      }}
 
-      input:checked + .slider:before {
+      input:checked + .slider:before {{
         transform: translateX(26px);
-      }
+      }}
 
-      .slider-label {
+      .slider-label {{
         font-size: 0.95rem;
-      }
+      }}
 
-      .control-row {
+      .control-row {{
         margin: 8px 0;
         display: flex;
         align-items: center;
         gap: 10px;
-      }
+      }}
 
-      .control-row span {
+      .control-row span {{
         min-width: 120px;
         font-size: 0.95rem;
-      }
+      }}
 
-      input[type="range"] {
+      input[type="range"] {{
         flex: 1;
-      }
+      }}
 
-      #calibrateBtn {
+      #calibrateBtn {{
         width: 100%;
         padding: 8px 0;
         border: none;
@@ -146,27 +146,27 @@ def web_page(): # Creating the webpage with basic HTML for POST requests
         color: white;
         font-size: 0.95rem;
         cursor: pointer;
-      }
+      }}
 
-      #calibrateBtn:hover {
+      #calibrateBtn:hover {{
         background-color: #145ca3;
-      }
+      }}
 
-      .launch-row {
+      .launch-row {{
         display: flex;
         flex-direction: column;
         gap: 8px;
-      }
+      }}
 
-      #json_url {
+      #json_url {{
         width: 100%;
         padding: 6px 8px;
         border-radius: 4px;
         border: 1px solid #ccc;
         font-size: 0.9rem;
-      }
+      }}
 
-      #launchBtn {
+      #launchBtn {{
         margin-top: 6px;
         width: 100%;
         padding: 12px 0;
@@ -179,11 +179,11 @@ def web_page(): # Creating the webpage with basic HTML for POST requests
         cursor: pointer;
         text-transform: uppercase;
         letter-spacing: 1px;
-      }
+      }}
 
-      #launchBtn:hover {
+      #launchBtn:hover {{
         background-color: #b71c1c;
-      }
+      }}
     </style>
   </head>
 
@@ -246,54 +246,54 @@ def web_page(): # Creating the webpage with basic HTML for POST requests
     </div>
 
     <script>
-      function sendControl(control, value) {
+      function sendControl(control, value) {{
         const body = new URLSearchParams({ control, value }).toString();
-        fetch("/", {
+        fetch("/", {{
           method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          headers: {{ "Content-Type": "application/x-www-form-urlencoded" }},
           body,
-        }).catch(() => {});
-      }
+        }}).catch(() => {{}});
+      }}
 
       // Power
-      document.getElementById("powerSwitch").addEventListener("change", (e) => {
+      document.getElementById("powerSwitch").addEventListener("change", (e) => {{
         sendControl("power", e.target.checked ? "on" : "off");
-      });
+      }});
 
       // θ angle
       const theta = document.getElementById("theta_angle");
       const thetaLabel = document.getElementById("theta_value");
 
-      theta.addEventListener("input", () => {
+      theta.addEventListener("input", () => {{
         thetaLabel.textContent = theta.value + "°";
         sendControl("theta", theta.value);
-      });
+      }});
 
       // φ angle
       const phi = document.getElementById("phi_angle");
       const phiLabel = document.getElementById("phi_value");
 
-      phi.addEventListener("input", () => {
+      phi.addEventListener("input", () => {{
         phiLabel.textContent = phi.value + "°";
         sendControl("phi", phi.value);
-      });
+      }});
 
       // Calibration uses current θ and φ
-      document.getElementById("calibrateBtn").addEventListener("click", () => {
+      document.getElementById("calibrateBtn").addEventListener("click", () => {{
         sendControl("calib_theta", theta.value);
         sendControl("calib_phi", phi.value);
         alert("Calibration set to θ = " + theta.value + "°, φ = " + phi.value + "°");
-      });
+      }});
 
       // Automated Launch
-      document.getElementById("launchBtn").addEventListener("click", () => {
+      document.getElementById("launchBtn").addEventListener("click", () => {{
         const url = document.getElementById("json_url").value.trim();
-        if (!url) {
+        if (!url) {{
           alert("Enter a JSON URL first.");
           return;
-        }
+        }}
         sendControl("launch", url);
-      });
+      }});
     </script>
   </body>
 </html>
