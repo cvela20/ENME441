@@ -32,7 +32,7 @@ def web_page(): # Creating the webpage with basic HTML for POST requests
     global theta_deg, phi_deg, calib_theta_deg, calib_phi_deg
 
     html = f"""
-<html>
+    <html>
   <head>
     <meta charset="UTF-8" />
     <title>Stepper Motor Turret Control</title>
@@ -364,5 +364,3 @@ s.bind(('', 80))
 s.listen(1)
 
 serve_web_page()
-
-print(f"Power = {Power}, Theta = {theta_deg}, Phi = {phi_deg} , Theta Offset = {calib_theta_deg}, Phi Offset = {calib_phi_deg}")
