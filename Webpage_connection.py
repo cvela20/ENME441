@@ -3,8 +3,18 @@
 import socket
 from RPi import GPIO
 
-#Set up output pins and pwm signals going to output pins
+#Initial variable and pin setup
 GPIO.setmode(GPIO.BCM)
+
+power_on = False
+theta_deg = 0.0
+phi_deg = 0.0
+calib_theta_deg = 0.0
+calib_phi_deg = 0.0
+
+
+
+
 
 # Parse function from class
 def parsePOSTdata(data):
@@ -284,6 +294,9 @@ def web_page(): # Creating the webpage with basic HTML for POST requests
 
 # Method for receiving a connection and parsing the data from the connection (website)
 def serve_web_page():
+
+    global power_on, theta_deg, phi_deg
+    global calib_theta_deg, calib_phi_deg
     while True:
         print('Waiting for connection...')
         conn, (client_ip, client_port) = s.accept() 
@@ -343,3 +356,5 @@ s.bind(('', 80))
 s.listen(1)
 
 serve_web_page()
+
+print(f"Power = {Power}, Theta = {theta_deg}, Phi = {phi_deg} , Theta Offset = {calib_theta_deg}, Phi Offset = {calib_phi_deg}")
