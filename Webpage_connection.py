@@ -300,22 +300,45 @@ def serve_web_page():
         print('Waiting for connection...')
         conn, (client_ip, client_port) = s.accept() 
         print(f'Connection from {client_ip} on client port {client_port}')
-        client_message = conn.recv(2048).decode('utf-8')
+        client_message = conn.recv(4096).decode('utf-8')
         print(f'Message from client:\n{client_message}')
         data_dict = parsePOSTdata(client_message)
 
-        if 'slider1' in data_dict.keys() and 'option' in data_dict.keys():  # Changing the LED brightness based on data recieved
-            led_brightness = int(data_dict["slider1"])
-            led_number = int(data_dict["option"])
-            if led_number == 1:
-                brightness[0] = led_brightness
-                pwms[0].ChangeDutyCycle(brightness[0])
-            elif led_number == 2:
-                brightness[1] = led_brightness
-                pwms[1].ChangeDutyCycle(brightness[1])
-            elif led_number == 3:
-                brightness[2] = led_brightness
-                pwms[2].ChangeDutyCycle(brightness[2])
+        if 'control' in data_dict and 'value' in data_dict:
+            control = data_dict['control']
+            value = data_dict['value']
+            pring(f"Control: {control}, Value: {value}")
+
+            if control == "power":
+                if value =="on":
+                    print(">>> Power On")
+                    # Stepper power here
+                else:
+                    pring("Power Off")
+                    #Disable stepper power
+
+        elif control == "theta":
+            theta_deg = float(value)
+            print(f" Set horizontal angle to {theta_deg} deg")
+            # Convert theta_deg to steps and move azimuth motor
+
+        elif control == "phi":
+            phi_deg = float(value)
+            proing(f"Set vertical angle (pji) to {phi_deg} deg")
+            # Convert phi_deg to steps and move elevation motor
+
+        elif control == "calib_theta":
+            calib_theta_deg = float(value)
+            print(f" Calibration phi set to {calib_phi_deg} deg")
+            #store as z axis roation offset
+
+        elif control == "launch":
+            json_url = value
+            print(f"Launch sequence requestion with JSON URL: {json_url}")
+            #Json-reading code and targeting
+
+        else:
+            print("Unknown control:", control)
 
         conn.send(b'HTTP/1.1 200 OK\r\n')                 
         conn.send(b'Content-Type: text/html\r\n')         
