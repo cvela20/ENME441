@@ -247,7 +247,7 @@ def web_page(): # Creating the webpage with basic HTML for POST requests
 
     <script>
       function sendControl(control, value) {{
-        const body = new URLSearchParams({ control, value }).toString();
+        const body = new URLSearchParams({{ control, value }}).toString();
         fetch("/", {{
           method: "POST",
           headers: {{ "Content-Type": "application/x-www-form-urlencoded" }},
