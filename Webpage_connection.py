@@ -31,7 +31,7 @@ def parsePOSTdata(data):
 def web_page(): # Creating the webpage with basic HTML for POST requests
     global theta_deg, phi_deg, calib_theta_deg, calib_phi_deg
 
-    html = """
+    html = f"""
     <html>
   <head>
     <meta charset="UTF-8" />
