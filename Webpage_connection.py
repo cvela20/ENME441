@@ -1,5 +1,5 @@
 
-
+import urllib.request
 import socket
 import time
 import multiprocessing
@@ -43,6 +43,13 @@ def parsePOSTdata(data):
         if len(key_val) == 2:
             data_dict[key_val[0]] = key_val[1]
     return data_dict
+
+def get_json(url):
+  with url.request.urlopen(url) as val:
+    raw_response = val.read
+    text_response = raw_response.decode("utf-8")
+    return json.loads(text_response)
+
 
 def web_page(): # Creating the webpage with basic HTML for POST requests
     global theta_deg, phi_deg, calib_theta_deg, calib_phi_deg
@@ -359,14 +366,14 @@ def serve_web_page():
                 print(f" Set horizontal angle to {theta_deg} deg")
 
           
-                m1.goAngle(theta_deg)
+                m2.goAngle(theta_deg)
 
             elif control == "phi":
                 phi_deg = float(value)
                 print(f"Set vertical angle (phi) to {phi_deg} deg")
                 
                 
-                m2.goAngle(phi_deg)
+                m1.goAngle(phi_deg)
 
             elif control == "calib_theta":
                 calib_theta_deg = float(value)
@@ -382,6 +389,7 @@ def serve_web_page():
                 json_url = value
                 print(f"Launch sequence requestion with JSON URL: {json_url}")
                 #Json-reading code and targeting
+
 
             else:
                 print("Unknown control:", control)
