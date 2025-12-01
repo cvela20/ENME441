@@ -339,10 +339,10 @@ def serve_web_page():
             if control == "power":
                 if value =="on":
                     print(">>> Power On")
-                    # Stepper power here
+                    power_on = True
                 else:
                     print("Power Off")
-                    #Disable stepper power
+                    power_off = False
 
             elif control == "theta":
                 theta_deg = float(value)
