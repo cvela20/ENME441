@@ -27,7 +27,7 @@ lock2 = multiprocessing.Lock()
 m1 = Stepper(s, lock1)
 m2 = Stepper(s, lock2)
 
-# Test for part 3 running both motors with goAngle at same time
+
 m1.zero()
 m2.zero()
 
@@ -280,9 +280,14 @@ def web_page(): # Creating the webpage with basic HTML for POST requests
       const theta = document.getElementById("theta_angle");
       const thetaLabel = document.getElementById("theta_value");
 
+      // Update display live while sliding
       theta.addEventListener("input", () => {{
-        thetaLabel.textContent = theta.value + "°";
-        sendControl("theta", theta.value);
+          thetaLabel.textContent = theta.value + "°";
+      }});
+
+      // Only send command when slider is released
+      theta.addEventListener("change", () => {{
+          sendControl("theta", theta.value);
       }});
 
       // φ angle
@@ -290,9 +295,14 @@ def web_page(): # Creating the webpage with basic HTML for POST requests
       const phiLabel = document.getElementById("phi_value");
 
       phi.addEventListener("input", () => {{
-        phiLabel.textContent = phi.value + "°";
-        sendControl("phi", phi.value);
+          phiLabel.textContent = phi.value + "°";
       }});
+
+      // Only send command when slider is released
+      phi.addEventListener("change", () => {{
+          sendControl("phi", phi.value);
+      }});
+
 
       // Calibration uses current θ and φ
       document.getElementById("calibrateBtn").addEventListener("click", () => {{
@@ -348,15 +358,15 @@ def serve_web_page():
                 theta_deg = float(value)
                 print(f" Set horizontal angle to {theta_deg} deg")
 
-                if power_on:
-                  m1.goAngle(theta_deg)
+          
+                m1.goAngle(theta_deg)
 
             elif control == "phi":
                 phi_deg = float(value)
                 print(f"Set vertical angle (phi) to {phi_deg} deg")
                 
-                if power_on:
-                  m2.goAngle(phi_deg)
+                
+                m2.goAngle(phi_deg)
 
             elif control == "calib_theta":
                 calib_theta_deg = float(value)
