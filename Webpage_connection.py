@@ -10,7 +10,7 @@ from RPi import GPIO
 #Initial variable and pin setup
 GPIO.setmode(GPIO.BCM)
 
-power = False
+power_on = False
 theta_deg = 0.0
 phi_deg = 0.0
 calib_theta_deg = 0.0
@@ -336,7 +336,7 @@ def web_page(): # Creating the webpage with HTML code
 # Method for receiving a connection and parsing the data from the connection (website)
 def serve_web_page():
 
-    global power, theta_deg, phi_deg
+    global power_on, theta_deg, phi_deg
     global calib_theta_deg, calib_phi_deg
 
     while True:
@@ -356,24 +356,24 @@ def serve_web_page():
             if control == "power":
                 if value =="on":
                     print(">>> Power On")
-                    power = True
+                    power_on = True
                 else:
                     print("Power Off")
-                    power = False
+                    power_off = False
 
             elif control == "theta":
                 theta_deg = float(value)
                 print(f" Set horizontal angle to {theta_deg} deg")
 
-                if power == True:
-                  m2.goAngle(theta_deg)
+          
+                m2.goAngle(theta_deg)
 
             elif control == "phi":
                 phi_deg = float(value)
                 print(f"Set vertical angle (phi) to {phi_deg} deg")
                 
-                if power == True:
-                  m1.goAngle(phi_deg)
+                
+                m1.goAngle(phi_deg)
 
             elif control == "calib_theta":
                 calib_theta_deg = float(value)
