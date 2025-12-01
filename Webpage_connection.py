@@ -1,6 +1,10 @@
 
 
 import socket
+import time
+import multiprocessing
+from shifter import Shifter
+from Stepper_Lab8_3 import Stepper
 from RPi import GPIO
 
 #Initial variable and pin setup
@@ -12,8 +16,20 @@ phi_deg = 0.0
 calib_theta_deg = 0.0
 calib_phi_deg = 0.0
 
+# Stepper Motor Setup
+Stepper.shifter_outputs = multiprocessing.Value('i')
 
+s = Shifter(data=16,latch=20,clock=21)   # set up Shifter
 
+lock1 = multiprocessing.Lock()
+lock2 = multiprocessing.Lock()
+
+m1 = Stepper(s, lock1)
+m2 = Stepper(s, lock2)
+
+# Test for part 3 running both motors with goAngle at same time
+m1.zero()
+m2.zero()
 
 
 # Parse function from class
@@ -305,7 +321,9 @@ def serve_web_page():
 
     global power_on, theta_deg, phi_deg
     global calib_theta_deg, calib_phi_deg
+
     while True:
+
         print('Waiting for connection...')
         conn, (client_ip, client_port) = s.accept() 
         print(f'Connection from {client_ip} on client port {client_port}')
@@ -329,12 +347,16 @@ def serve_web_page():
             elif control == "theta":
                 theta_deg = float(value)
                 print(f" Set horizontal angle to {theta_deg} deg")
-                # Convert theta_deg to steps and move azimuth motor
+
+                if power_on:
+                  m1.goAngle(theta_deg)
 
             elif control == "phi":
                 phi_deg = float(value)
                 print(f"Set vertical angle (phi) to {phi_deg} deg")
-                # Convert phi_deg to steps and move elevation motor
+                
+                if power_on:
+                  m2.goAngle(phi_deg)
 
             elif control == "calib_theta":
                 calib_theta_deg = float(value)
