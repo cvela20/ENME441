@@ -427,7 +427,7 @@ def serve_web_page():
         conn.sendall(web_page())
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # Set up socket connection
-s.bind(('', 80))
+s.bind(('', 8080))
 s.listen(1)
 
 serve_web_page()
