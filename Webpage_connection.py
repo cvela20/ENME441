@@ -11,10 +11,14 @@ from RPi import GPIO
 GPIO.setmode(GPIO.BCM)
 
 power = False
+laser_state = False
 theta_deg = 0.0
 phi_deg = 0.0
 calib_theta_deg = 0.0
 calib_phi_deg = 0.0
+
+laser_pin = 15
+GPIO.setup(laser_pin, GPIO.OUT, initial=GPIO.LOW)
 
 # Stepper Motor Setup
 Stepper.shifter_outputs = multiprocessing.Value('i')
@@ -225,6 +229,18 @@ def web_page(): # Creating the webpage with HTML code
       </div>
     </div>
 
+    <!-- Laser Control Section -->
+    <div class="section">
+      <div class="section-title">Laser</div>
+      <div class="switch-wrapper">
+        <span class="slider-label">Laser Enable</span>
+        <label class="switch">
+          <input type="checkbox" id="laserSwitch" />
+          <span class="slider"></span>
+        </label>
+      </div>
+    </div>
+
     <!-- Angle Control Section -->
     <div class="section">
       <div class="section-title">Turret Angles</div>
@@ -283,6 +299,11 @@ def web_page(): # Creating the webpage with HTML code
         sendControl("power", e.target.checked ? "on" : "off");
       }});
 
+      // Laser ON / OFF
+      document.getElementById("laserSwitch").addEventListener("change", (e) => {{
+        sendControl("laser", e.target.checked ? "on" : "off");
+      }});
+
       // θ angle
       const theta = document.getElementById("theta_angle");
       const thetaLabel = document.getElementById("theta_value");
@@ -336,7 +357,7 @@ def web_page(): # Creating the webpage with HTML code
 # Method for receiving a connection and parsing the data from the connection (website)
 def serve_web_page():
 
-    global power, theta_deg, phi_deg
+    global power, laser_state, theta_deg, phi_deg
     global calib_theta_deg, calib_phi_deg
 
     while True:
@@ -365,15 +386,15 @@ def serve_web_page():
                 theta_deg = float(value)
                 print(f" Set horizontal angle to {theta_deg} deg")
 
-          
-                m2.goAngle(theta_deg)
+                if power == True:
+                  m2.goAngle(theta_deg)
 
             elif control == "phi":
                 phi_deg = float(value)
                 print(f"Set vertical angle (phi) to {phi_deg} deg")
                 
-                
-                m1.goAngle(phi_deg)
+                if power == True:
+                  m1.goAngle(phi_deg)
 
             elif control == "calib_theta":
                 calib_theta_deg = float(value)
@@ -390,6 +411,12 @@ def serve_web_page():
                 print(f"Launch sequence requestion with JSON URL: {json_url}")
                 #Json-reading code and targeting
 
+            elif control == "laser":
+              laser_state = (value == "on")
+              if laser_state == True:
+                GPIO.output(laser_pin, GPIO.HIGH)
+              else:
+                GPIO.output(laser_pin, GPIO.LOW)
 
             else:
                 print("Unknown control:", control)
