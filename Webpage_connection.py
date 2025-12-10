@@ -19,7 +19,7 @@ calib_phi_deg = 0.0
 # Stepper Motor Setup
 Stepper.shifter_outputs = multiprocessing.Value('i')
 
-s = Shifter(data=16,latch=20,clock=21)   # set up Shifter
+s = Shifter(data=17,latch=27,clock=22)   # set up Shifter
 
 lock1 = multiprocessing.Lock()
 lock2 = multiprocessing.Lock()
