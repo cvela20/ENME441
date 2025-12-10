@@ -387,14 +387,14 @@ def serve_web_page():
                 print(f" Set horizontal angle to {theta_deg} deg")
 
                 if power == True:
-                  m2.goAngle(theta_deg)
+                  m1.goAngle(theta_deg)
 
             elif control == "phi":
                 phi_deg = float(value)
                 print(f"Set vertical angle (phi) to {phi_deg} deg")
                 
                 if power == True:
-                  m1.goAngle(phi_deg)
+                  m2.goAngle(phi_deg)
 
             elif control == "calib_theta":
                 calib_theta_deg = float(value)
