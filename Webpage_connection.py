@@ -3,6 +3,7 @@ import urllib.request
 import socket
 import time
 import multiprocessing
+import json
 from shifter import Shifter
 from urllib.parse import unquote_plus  
 from Stepper_Lab8_3 import Stepper
@@ -412,9 +413,45 @@ def serve_web_page():
 
             elif control == "launch":
                 json_url = value.strip()
-                print(f"Launch sequence requestion with JSON URL: {json_url}")
-                test_text = get_json(json_url)
-                print(f" Test text value for interem {test_text} ")
+                
+                json_text = get_json(json_url)
+
+                data = json.loads(json_text)
+
+                turret_number_list = []
+                turret_r_list = []
+                turret_theta_list = []
+                turret_dict = {}
+
+                for turret_number, turret_data in data["turrets"].items():
+                  turret_number_list.append(int(turret_number))
+                  turret_r_list.append(turret_data["r"])
+                  turret_theta_list.append(turret_data["theta"])
+                  turret_dict[int(turret_number)] = turret_data
+
+                globes_r = []
+                globes_theta = []
+                globes_z = []
+                globes_list = []
+
+                for globe in data["globes"]:
+                  globes_r.append(globe["r"])
+                  globes_theta.append(globe["theta"])
+                  globes_z.append(globe["z"])
+                  globes_list.append(globe)
+
+                print("\n==== PARSED JSON DATA ====")
+
+                print("\n--- TURRETS ---")
+                print("IDs:", turret_number_list)
+                print("r values:", turret_r_list)
+                print("theta values:", turret_theta_list)
+
+                print("\n--- GLOBES ---")
+                print("r values:", globes_r)
+                print("theta values:", globes_theta)
+                print("z values:", globes_z)
+                
 
 
             elif control == "laser":
