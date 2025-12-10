@@ -122,7 +122,7 @@ class Stepper:
 if __name__ == '__main__':
     Stepper.shifter_outputs = multiprocessing.Value('i')
 
-    s = Shifter(data=16,latch=20,clock=21)   # set up Shifter
+    s = Shifter(data=17,latch=27,clock=22)   # set up Shifter
 
     # Use multiprocessing.Lock() to prevent motors from trying to 
     # execute multiple operations at the same time:
