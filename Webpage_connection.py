@@ -454,17 +454,32 @@ def serve_web_page():
                 print("z values:", globes_z)
                 
                 if power == False:
-                  print("Power if OFF")
+                  print("Power is OFF")
                 else:
-                  for tid, theta_rad in zip(turret_number_list, turret_theta_list):
-                    theta_deg_target = math.degrees(theta_rad)
+                  while power == True:
+                    for tid, theta_rad in zip(turret_number_list, turret_theta_list):
+                      theta_deg_target = math.degrees(theta_rad)
 
-                    m1.goAngle(theta_deg_target)
+                      m1.goAngle(theta_deg_target)
 
-                    GPIO.output(laser_pin, GPIO.HIGH)
-                    time.sleep(3.0)
-                    GPIO.output(laser_pin, GPIO.LOW)
-                    time.sleep(0.5)
+                      GPIO.output(laser_pin, GPIO.HIGH)
+                      time.sleep(3.0)
+                      GPIO.output(laser_pin, GPIO.LOW)
+                      time.sleep(0.5)
+
+                    for i, (r, theta_rad, z) in enumerate(zip(globes_r, globes_theta, globes_z)):
+                      theta_deg_target = math.degrees(theta_rad)
+                      phi_deg_target = math.degrees(math.atan2(z,r))
+
+                      m1.goAngle(theta_deg_target)
+                      m2.goAngle(phi_deg_target)
+
+                      GPIO.output(laser_pin, GPIO.HIGH)
+                      time.sleep(3)
+                      GPIO.output(laser_pin, GPIO.LOW)
+                      time.sleep(0.5)
+
+
 
 
             elif control == "laser":
