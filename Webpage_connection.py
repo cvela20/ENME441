@@ -4,6 +4,7 @@ import socket
 import time
 import multiprocessing
 import json
+import math
 from shifter import Shifter
 from urllib.parse import unquote_plus  
 from Stepper_Lab8_3 import Stepper
@@ -452,6 +453,18 @@ def serve_web_page():
                 print("theta values:", globes_theta)
                 print("z values:", globes_z)
                 
+                if power == False:
+                  print("Power if OFF")
+                else:
+                  for tid, theta_rad in zip(turret_number_list, turret_theta_list):
+                    theta_deg_target = math.degrees(theta_rad)
+
+                    m1.goAngle(theta_deg_target)
+
+                    GPIO.output(laser_pin, GPIO.HIGH)
+                    time.sleep(3.0)
+                    GPIO.output(laser_pin, GPIO.LOW)
+                    time.sleep(0.5)
 
 
             elif control == "laser":
