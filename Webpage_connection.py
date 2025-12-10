@@ -4,6 +4,7 @@ import socket
 import time
 import multiprocessing
 from shifter import Shifter
+from urllib.parse import unquote_plus  
 from Stepper_Lab8_3 import Stepper
 from RPi import GPIO
 
@@ -36,23 +37,26 @@ m1.zero()
 m2.zero()
 
 
-# Parse function from class
 def parsePOSTdata(data):
     data_dict = {}
-    idx = data.find('\r\n\r\n')+4
+    idx = data.find('\r\n\r\n') + 4
     data = data[idx:]
     data_pairs = data.split('&')
     for pair in data_pairs:
         key_val = pair.split('=')
         if len(key_val) == 2:
-            data_dict[key_val[0]] = key_val[1]
+            key = key_val[0]
+            value = unquote_plus(key_val[1])
+            data_dict[key] = value
     return data_dict
 
+
 def get_json(url):
-  with url.request.urlopen(url) as val:
-    raw_response = val.read
+  with urllib.request.urlopen(url) as val:
+    raw_response = val.read()
     text_response = raw_response.decode("utf-8")
-    return json.loads(text_response)
+    return text_response
+    ##return json.loads(text_response)
 
 
 def web_page(): # Creating the webpage with HTML code
@@ -407,9 +411,11 @@ def serve_web_page():
                 #store as z axis roation offset
 
             elif control == "launch":
-                json_url = value
+                json_url = value.strip()
                 print(f"Launch sequence requestion with JSON URL: {json_url}")
-                #Json-reading code and targeting
+                test_text = get_json(json_url)
+                print(f" Test text value for interem {test_text} ")
+
 
             elif control == "laser":
               laser_state = (value == "on")
