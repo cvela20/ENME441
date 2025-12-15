@@ -20,7 +20,7 @@ theta_deg = 0.0
 phi_deg = 0.0
 calib_theta_deg = 0.0
 calib_phi_deg = 0.0
-aim = Aim(calib_theta_deg=calib_theta_deg)
+aim = Aim(calib_theta_deg=calib_theta_deg, calib_phi_deg=calib_phi_deg, laser_height_m=7.62)
 
 
 laser_pin = 15
@@ -413,6 +413,7 @@ def serve_web_page():
 
             elif control == "calib_phi":
                 calib_phi_deg = float(value)
+                aim.calib_phi_deg = calib_phi_deg
                 print(f" Calibration phi set to {calib_phi_deg} deg")
               
 
