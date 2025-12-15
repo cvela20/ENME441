@@ -15,6 +15,6 @@ while True:
     theta0_rad = math.radians(theta0_deg)
     thetat_rad = math.radians(thetat_deg)
 
-    result = aim.turret_aim_angle(r0, theta0_rad, rt, thetat_rad)
+    result = aim.theta_aim_angle(r0, theta0_rad, rt, thetat_rad)
 
     print(f"→ Aim angle: {result:.2f} degrees")
