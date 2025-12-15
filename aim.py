@@ -34,5 +34,5 @@ if __name__ == "__main__":
     # Target turret at r=300, theta=pi/2 rad (point on +y axis)
     rt, tt = 300.0, math.pi/2
 
-    ang = a.turret_aim_angle(r0, t0, rt, tt)
+    ang = a.theta_aim_angle(r0, t0, rt, tt)
     print("Aim angle (deg):", ang)
