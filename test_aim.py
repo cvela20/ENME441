@@ -1,20 +1,40 @@
 import math
 from aim import Aim
 
-aim = Aim(calib_theta_deg=0.0)
+# Create Aim object with known parameters
+aim = Aim(
+    calib_theta_deg=0.0,
+    calib_phi_deg=0.0,
+    laser_height_m=7.62  # 3 inches
+)
+
+# Fixed turret position
+r0 = 3
+theta0 = 0.0      # radians
+z_base = 0.0
+
+print("\n--- Phi Angle Test ---")
+print("Ctrl+C to exit\n")
 
 while True:
-    print("\n--- New Test ---")
+    try:
+        r = float(input("Target radius r (m): "))
+        z = float(input("Target height z (m): "))
 
-    r0 = float(input("Your turret radius: "))
-    theta0_deg = float(input("Your turret angle (deg): "))
+        phi = aim.phi_aim_angle(
+            r0=r0,
+            theta0=theta0,
+            rt=r,
+            thetat=0.0,          # straight ahead
+            z_target_m=z,
+            z_base_m=z_base
+        )
 
-    rt = float(input("Target turret radius: "))
-    thetat_deg = float(input("Target turret angle (deg): "))
+        phi_limited = aim.phi_limit(phi)
 
-    theta0_rad = math.radians(theta0_deg)
-    thetat_rad = math.radians(thetat_deg)
+        print(f"→ Raw φ (deg):     {phi:.2f}")
+        print(f"→ Limited φ (deg): {phi_limited:.2f}\n")
 
-    result = aim.theta_aim_angle(r0, theta0_rad, rt, thetat_rad)
-
-    print(f"→ Aim angle: {result:.2f} degrees")
+    except KeyboardInterrupt:
+        print("\nExiting phi test.")
+        break
