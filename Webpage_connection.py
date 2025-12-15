@@ -9,6 +9,7 @@ from shifter import Shifter
 from urllib.parse import unquote_plus  
 from Stepper_Lab8_3 import Stepper
 from RPi import GPIO
+from aim import Aim
 
 #Initial variable and pin setup
 GPIO.setmode(GPIO.BCM)
@@ -19,6 +20,8 @@ theta_deg = 0.0
 phi_deg = 0.0
 calib_theta_deg = 0.0
 calib_phi_deg = 0.0
+aim = Aim(calib_theta_deg=calib_theta_deg)
+
 
 laser_pin = 15
 GPIO.setup(laser_pin, GPIO.OUT, initial=GPIO.LOW)
@@ -393,24 +396,25 @@ def serve_web_page():
                 print(f" Set horizontal angle to {theta_deg} deg")
 
                 if power == True:
-                  m1.goAngle(theta_deg)
+                  m1.goAngle((theta_deg - calib_theta_deg) % 360)
 
             elif control == "phi":
                 phi_deg = float(value)
                 print(f"Set vertical angle (phi) to {phi_deg} deg")
                 
                 if power == True:
-                  m2.goAngle(phi_deg)
+                  m2.goAngle(phi_deg - calib_phi_deg)
 
             elif control == "calib_theta":
                 calib_theta_deg = float(value)
+                aim.calib_theta_deg = calib_theta_deg
                 print(f" Calibration theta set to {calib_theta_deg} deg")
-                #store as z axis roation offset
+               
 
             elif control == "calib_phi":
                 calib_phi_deg = float(value)
                 print(f" Calibration phi set to {calib_phi_deg} deg")
-                #store as z axis roation offset
+              
 
             elif control == "launch":
                 json_url = value.strip()
@@ -456,28 +460,36 @@ def serve_web_page():
                 if power == False:
                   print("Power is OFF")
                 else:
-                  while power == True:
-                    for tid, theta_rad in zip(turret_number_list, turret_theta_list):
-                      theta_deg_target = math.degrees(theta_rad)
+                  
+                  Turret_ID = 1
+                  r0 = turret_dict[Turret_ID]["r"]
+                  theta0_rad = turret_dict[Turret_ID]["theta"]
 
-                      m1.goAngle(theta_deg_target)
+                  for tid, rt, theta_rad in zip(turret_number_list, turret_theta_list):
 
-                      GPIO.output(laser_pin, GPIO.HIGH)
-                      time.sleep(3.0)
-                      GPIO.output(laser_pin, GPIO.LOW)
-                      time.sleep(0.5)
+                    if tid == Turret_ID:
+                      continue
 
-                    for i, (r, theta_rad, z) in enumerate(zip(globes_r, globes_theta, globes_z)):
-                      theta_deg_target = math.degrees(theta_rad)
-                      phi_deg_target = math.degrees(math.atan2(z,r))
+                    theta_deg_target = aim.theta_aim_angle(r0, theta0_rad, rt, thetat_rad)
 
-                      m1.goAngle(theta_deg_target)
-                      m2.goAngle(phi_deg_target)
+                    m1.goAngle(theta_deg_target)
 
-                      GPIO.output(laser_pin, GPIO.HIGH)
-                      time.sleep(3)
-                      GPIO.output(laser_pin, GPIO.LOW)
-                      time.sleep(0.5)
+                    GPIO.output(laser_pin, GPIO.HIGH)
+                    time.sleep(3.0)
+                    GPIO.output(laser_pin, GPIO.LOW)
+                    time.sleep(0.5)
+
+                  for i, (r, theta_rad, z) in enumerate(zip(globes_r, globes_theta, globes_z)):
+                    theta_deg_target = aim.theta_aim_angle(r0, theta0_rad, r, theta_rad)
+                    phi_deg_target = math.degrees(math.atan2(z,r)) - calib_phi_deg
+
+                    m1.goAngle(theta_deg_target)
+                    m2.goAngle(phi_deg_target)
+
+                    GPIO.output(laser_pin, GPIO.HIGH)
+                    time.sleep(3)
+                    GPIO.output(laser_pin, GPIO.LOW)
+                    time.sleep(0.5)
 
 
 
