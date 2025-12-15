@@ -5,7 +5,7 @@ class Aim:
 	def __init__(self, calib_theta_deg = 0.0):
 		self.calib_theta_deg = calib_theta_deg
 
-	def polar_to_cart(r, theta_rad):
+	def polar_to_cart(self, r, theta_rad):
 		x = r * math.cos(theta_rad)
 		y = r * math.sin(theta_rad)
 
