@@ -465,7 +465,7 @@ def serve_web_page():
                   r0 = turret_dict[Turret_ID]["r"]
                   theta0_rad = turret_dict[Turret_ID]["theta"]
 
-                  for tid, rt, theta_rad in zip(turret_number_list, turret_theta_list):
+                  for tid, rt, theta_rad in zip(turret_number_list, turret_r_list, turret_theta_list):
 
                     if tid == Turret_ID:
                       continue
