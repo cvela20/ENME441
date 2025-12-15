@@ -19,20 +19,15 @@ class Aim:
 		dx = xt - x0
 		dy = yt - y0
 
-		aim_theta = math.degrees(math.atan2(dy, dx))
-		aim_theta = (aim_theta - self.calib_theta_deg) % 360
+		aim_abs = math.degrees(math.atan2(dy, dx)) % 360
 
-		return aim_theta
+		# absolute angle that points from your turret to the center (0,0)
+		center_abs = math.degrees(math.atan2(-y0, -x0)) % 360
+
+		# relative angle where 0° means "facing center"
+		aim_rel = (aim_abs - center_abs - self.calib_theta_deg) % 360
+
+		return aim_rel
 
 
-if __name__ == "__main__":
-    a = Aim(calib_theta_deg=0.0)
 
-    # Place your turret at r=300, theta=0 rad (point on +x axis)
-    r0, t0 = 300.0, 0.0
-
-    # Target turret at r=300, theta=pi/2 rad (point on +y axis)
-    rt, tt = 300.0, math.pi/2
-
-    ang = a.theta_aim_angle(r0, t0, rt, tt)
-    print("Aim angle (deg):", ang)
