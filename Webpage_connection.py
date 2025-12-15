@@ -470,7 +470,7 @@ def serve_web_page():
                     if tid == Turret_ID:
                       continue
 
-                    theta_deg_target = aim.theta_aim_angle(r0, theta0_rad, rt, thetat_rad)
+                    theta_deg_target = aim.theta_aim_angle(r0, theta0_rad, rt, theta_rad)
 
                     m1.goAngle(theta_deg_target)
 
