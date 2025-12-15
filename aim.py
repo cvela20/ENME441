@@ -20,7 +20,7 @@ class Aim:
 		dy = yt - y0
 
 		aim_theta = math.degrees(math.atan2(dy, dx))
-		aim_theta = (aim_theta_deg - self.calib_theta_deg) % 360
+		aim_theta = (aim_theta - self.calib_theta_deg) % 360
 
 		return aim_theta
 
