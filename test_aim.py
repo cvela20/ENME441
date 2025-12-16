@@ -114,7 +114,7 @@ def run_test(use_real_motors=False):
        
 
         m1.goAngle(theta_cmd)
-        m2.goAngle(phi_cmd_limited)
+        m2.goAngle(phi_cmd)
         time.sleep(0.75)
 
 
