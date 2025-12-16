@@ -107,12 +107,11 @@ def run_test(use_real_motors=False):
 
         theta_cmd = aim.theta_aim_angle(r0, theta0_rad, rt, thetat)
         phi_cmd = aim.phi_aim_angle(r0, theta0_rad, rt, thetat, z_target=zt, z_base=0.0)
-        phi_cmd_limited = aim.phi_limit(phi_cmd)
 
         print(f"\nGlobe {i}:")
         print(f"  theta_cmd = {theta_cmd:.2f} deg")
         print(f"  phi_raw   = {phi_cmd:.2f} deg")
-        print(f"  phi_limited = {phi_cmd_limited:.2f} deg")
+       
 
         m1.goAngle(theta_cmd)
         m2.goAngle(phi_cmd_limited)
