@@ -20,7 +20,7 @@ theta_deg = 0.0
 phi_deg = 0.0
 calib_theta_deg = 0.0
 calib_phi_deg = 0.0
-aim = Aim(calib_theta_deg=calib_theta_deg, calib_phi_deg=calib_phi_deg, laser_height_m=7.62)
+aim = Aim(calib_theta_deg=calib_theta_deg, calib_phi_deg=calib_phi_deg, laser_height=7.62)
 
 
 laser_pin = 15
@@ -60,8 +60,9 @@ def get_json(url):
   with urllib.request.urlopen(url) as val:
     raw_response = val.read()
     text_response = raw_response.decode("utf-8")
+  
     return text_response
-    ##return json.loads(text_response)
+    
 
 
 def web_page(): # Creating the webpage with HTML code
