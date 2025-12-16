@@ -49,14 +49,4 @@ class Aim:
 
 		return phi_deg
 
-	def phi_limit(self, phi_deg):
-
-		if phi_deg > 0:
-			return 0.0
-
-		elif phi_deg < -90:
-			return -90
-
-		else:
-			return phi_deg
 
