@@ -2,10 +2,10 @@ import math
 
 class Aim:
 
-	def __init__(self, calib_theta_deg = 0.0, calib_phi_deg=0.0, laser_height_cm =0.0):
+	def __init__(self, calib_theta_deg = 0.0, calib_phi_deg=0.0, laser_height =0.0):
 		self.calib_theta_deg = calib_theta_deg
 		self.calib_phi_deg = calib_phi_deg
-		self.laser_height_m = laser_height_m
+		self.laser_height = laser_height
 
 	def polar_to_cart(self, r, theta_rad):
 		x = r * math.cos(theta_rad)
@@ -31,15 +31,15 @@ class Aim:
 
 		return aim_rel
 
-	def phi_aim_angle(self, r0, theta0, rt, thetat, z_target_m, z_base_m=0.0):
+	def phi_aim_angle(self, r0, theta0, rt, thetat, z_target, z_base=0.0):
 		x0, y0 = self.polar_to_cart(r0, theta0)
 		xt, yt = self.polar_to_cart(rt, thetat)
 
-		z0 = z_base_m + self.laser_height_m
+		z0 = z_base + self.laser_height
 
 		dx = xt-x0
 		dy = yt-y0
-		dz = z_target_m - z0
+		dz = z_target - z0
 
 		horiz_dist = math.sqrt(dx*dx + dy*dy)
 
