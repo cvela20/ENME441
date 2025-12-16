@@ -52,7 +52,7 @@ def run_test(use_real_motors=False):
     aim = Aim(
         calib_theta_deg=0.0,
         calib_phi_deg=0.0,
-        laser_height_m=7.62  # if you're using cm everywhere, keep this in cm
+        laser_height=7.62  # if you're using cm everywhere, keep this in cm
     )
 
     # -------------------------
@@ -106,7 +106,7 @@ def run_test(use_real_motors=False):
         zt = g["z"]
 
         theta_cmd = aim.theta_aim_angle(r0, theta0_rad, rt, thetat)
-        phi_cmd = aim.phi_aim_angle(r0, theta0_rad, rt, thetat, z_target_m=zt, z_base_m=0.0)
+        phi_cmd = aim.phi_aim_angle(r0, theta0_rad, rt, thetat, z_target=zt, z_base=0.0)
         phi_cmd_limited = aim.phi_limit(phi_cmd)
 
         print(f"\nGlobe {i}:")
