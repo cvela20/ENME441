@@ -120,4 +120,4 @@ def run_test(use_real_motors=False):
 
 if __name__ == "__main__":
     # Set True ONLY on the Pi when hardware is connected
-    run_test(use_real_motors=False)
+    run_test(use_real_motors=True)
