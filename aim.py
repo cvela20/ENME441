@@ -45,8 +45,6 @@ class Aim:
 
 		phi_deg = math.degrees(math.atan2(dz, horiz_dist))
 
-		phi_deg = phi_deg - self.calib_phi_deg
-
 		return phi_deg
 
 

@@ -18,9 +18,7 @@ power = False
 laser_state = False
 theta_deg = 0.0
 phi_deg = 0.0
-calib_theta_deg = 0.0
-calib_phi_deg = 0.0
-aim = Aim(calib_theta_deg=calib_theta_deg, calib_phi_deg=calib_phi_deg, laser_height=7.62)
+aim = Aim(laser_height=7.62)
 
 
 laser_pin = 15
@@ -66,7 +64,7 @@ def get_json(url):
 
 
 def web_page(): # Creating the webpage with HTML code
-    global theta_deg, phi_deg, calib_theta_deg, calib_phi_deg
+    global theta_deg, phi_deg
 
     html = f"""
     <html>
@@ -268,17 +266,21 @@ def web_page(): # Creating the webpage with HTML code
       </div>
     </div>
 
-    <!-- Calibration Section -->
+    <!-- Calibration / Zero Section -->
     <div class="section">
-      <div class="section-title">Calibration</div>
-      <p>Current Calibration:</p>
-      <p>
-        θ₀ = {calib_theta_deg:.1f}° <br>
-        φ₀ = {calib_phi_deg:.1f}°
-      </p>
+      <div class="section-title">Zero Motors</div>
 
-      <button id="calibrateBtn">Set Calibration</button>
+      <div class="control-row">
+        <span>Horizontal (θ)</span>
+        <button id="zeroThetaBtn">Set θ to Zero</button>
+      </div>
+
+      <div class="control-row">
+        <span>Vertical (φ)</span>
+        <button id="zeroPhiBtn">Set φ to Zero</button>
+      </div>
     </div>
+
 
     <!-- Automated Targeting Section -->
     <div class="section">
@@ -318,10 +320,7 @@ def web_page(): # Creating the webpage with HTML code
       const theta = document.getElementById("theta_angle");
       const thetaLabel = document.getElementById("theta_value");
 
-      // Update display live while sliding
-      theta.addEventListener("input", () => {{
-          thetaLabel.textContent = theta.value + "°";
-      }});
+ 
 
       // Only send command when slider is released
       theta.addEventListener("change", () => {{
@@ -341,13 +340,19 @@ def web_page(): # Creating the webpage with HTML code
           sendControl("phi", phi.value);
       }});
 
-
-      // Calibration uses current θ and φ
-      document.getElementById("calibrateBtn").addEventListener("click", () => {{
-        sendControl("calib_theta", theta.value);
-        sendControl("calib_phi", phi.value);
-        alert("Calibration set to θ = " + theta.value + "°, φ = " + phi.value + "°");
+      // Zero θ motor
+      document.getElementById("zeroThetaBtn").addEventListener("click", () => {{
+        sendControl("zero_theta", "1");
+        alert("Horizontal axis zeroed.");
       }});
+
+      // Zero φ motor
+      document.getElementById("zeroPhiBtn").addEventListener("click", () => {{
+        sendControl("zero_phi", "1");
+        alert("Vertical axis zeroed.");
+      }});
+
+      
 
       // Automated Launch
       document.getElementById("launchBtn").addEventListener("click", () => {{
@@ -368,7 +373,6 @@ def web_page(): # Creating the webpage with HTML code
 def serve_web_page():
 
     global power, laser_state, theta_deg, phi_deg
-    global calib_theta_deg, calib_phi_deg
 
     while True:
 
@@ -397,25 +401,32 @@ def serve_web_page():
                 print(f" Set horizontal angle to {theta_deg} deg")
 
                 if power == True:
-                  m1.goAngle((theta_deg - calib_theta_deg) % 360)
+                  m1.goAngle(theta_deg % 360)
 
             elif control == "phi":
                 phi_deg = float(value)
                 print(f"Set vertical angle (phi) to {phi_deg} deg")
                 
                 if power == True:
-                  m2.goAngle(phi_deg - calib_phi_deg)
+                  m2.goAngle(phi_deg)
 
-            elif control == "calib_theta":
-                calib_theta_deg = float(value)
-                aim.calib_theta_deg = calib_theta_deg
-                print(f" Calibration theta set to {calib_theta_deg} deg")
-               
+            elif control == "zero_theta":
+                if power:
+                    m1.zero()
+                    theta_deg = 0.0
+                    print(">>> Theta motor zeroed")
+                else:
+                    print(">>> Power OFF: cannot zero theta")
 
-            elif control == "calib_phi":
-                calib_phi_deg = float(value)
-                aim.calib_phi_deg = calib_phi_deg
-                print(f" Calibration phi set to {calib_phi_deg} deg")
+            elif control == "zero_phi":
+                if power:
+                    m2.zero()
+                    phi_deg = 0.0
+                    print(">>> Phi motor zeroed")
+                else:
+                    print(">>> Power OFF: cannot zero phi")
+
+
               
 
             elif control == "launch":
@@ -487,7 +498,7 @@ def serve_web_page():
 
 
                     m1.goAngle(theta_deg_target)
-                    m2.goAngle(-phi_deg_target)
+                    m2.goAngle(phi_deg_target)
 
                     GPIO.output(laser_pin, GPIO.HIGH)
                     time.sleep(3)
