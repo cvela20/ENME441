@@ -18,6 +18,9 @@ power = False
 laser_state = False
 theta_deg = 0.0
 phi_deg = 0.0
+Turret_ID = int(input("Enter Turret Number: ").strip())
+print(f"Using Turret ID = {Turret_ID}")
+
 aim = Aim(laser_height=7.62)
 
 
@@ -474,7 +477,7 @@ def serve_web_page():
                   print("Power is OFF")
                 else:
                   
-                  Turret_ID = 10
+                  
                   r0 = turret_dict[Turret_ID]["r"]
                   theta0_rad = turret_dict[Turret_ID]["theta"]
 
