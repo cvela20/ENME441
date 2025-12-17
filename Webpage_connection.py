@@ -485,7 +485,6 @@ def serve_web_page():
                     theta_deg_target = aim.theta_aim_angle(r0, theta0_rad, r, theta_rad)
                     phi_deg_target = aim.phi_aim_angle(r0, theta0_rad, r, theta_rad, z_target=z)
 
-                    phi_deg_target = aim.phi_limit(phi_deg_target)
 
                     m1.goAngle(theta_deg_target)
                     m2.goAngle(phi_deg_target)
