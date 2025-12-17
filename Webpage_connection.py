@@ -491,6 +491,10 @@ def serve_web_page():
 
                     theta_deg_target = aim.theta_aim_angle(r0, theta0_rad, rt, theta_rad)
 
+                    theta_deg_target += 2.0       
+                    theta_deg_target %= 360       
+
+
                     m1.goAngle(theta_deg_target)
 
                     GPIO.output(laser_pin, GPIO.HIGH)
@@ -502,8 +506,11 @@ def serve_web_page():
                     theta_deg_target = aim.theta_aim_angle(r0, theta0_rad, r, theta_rad)
                     phi_deg_target = aim.phi_aim_angle(r0, theta0_rad, r, theta_rad, z_target=z)
 
+                    
+                    theta_deg_target += 2.0       
+                    theta_deg_target %= 360        
 
-                    m1.goAngle(theta_deg_target+2)
+                    m1.goAngle(theta_deg_target)
                     m2.goAngle(-(phi_deg_target))
 
                     GPIO.output(laser_pin, GPIO.HIGH)
