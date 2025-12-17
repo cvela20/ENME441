@@ -21,7 +21,7 @@ phi_deg = 0.0
 Turret_ID = int(input("Enter Turret Number: ").strip())
 print(f"Using Turret ID = {Turret_ID}")
 
-aim = Aim(laser_height=7.62)
+aim = Aim(laser_height=7.874)
 
 
 laser_pin = 15
