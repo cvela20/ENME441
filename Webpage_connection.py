@@ -323,7 +323,10 @@ def web_page(): # Creating the webpage with HTML code
       const theta = document.getElementById("theta_angle");
       const thetaLabel = document.getElementById("theta_value");
 
- 
+      theta.addEventListener("input", () => {{
+        thetaLabel.textContent = theta.value + "°";
+      }});
+
 
       // Only send command when slider is released
       theta.addEventListener("change", () => {{
@@ -501,7 +504,7 @@ def serve_web_page():
 
 
                     m1.goAngle(theta_deg_target)
-                    m2.goAngle(phi_deg_target)
+                    m2.goAngle(-(phi_deg_target))
 
                     GPIO.output(laser_pin, GPIO.HIGH)
                     time.sleep(3)
