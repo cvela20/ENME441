@@ -39,7 +39,7 @@ class Stepper:
     num_steppers = 0      # track number of Steppers instantiated
     shifter_outputs = 0   # track shift register outputs for all motors
     seq = [0b0001,0b0011,0b0010,0b0110,0b0100,0b1100,0b1000,0b1001] # CCW sequence
-    delay = 7000          # delay between motor steps [us]
+    delay = 10000          # delay between motor steps [us]
     steps_per_degree = (4096)/(360*4)    # 4096 steps/rev * 1/360 rev/deg
 
     def __init__(self, shifter, lock):
@@ -117,47 +117,3 @@ class Stepper:
         self.angle.value = 0.0
         alock.release()
 
-
-
-if __name__ == '__main__':
-    Stepper.shifter_outputs = multiprocessing.Value('i')
-
-    s = Shifter(data=17,latch=27,clock=22)   # set up Shifter
-
-    # Use multiprocessing.Lock() to prevent motors from trying to 
-    # execute multiple operations at the same time:
-    lock1 = multiprocessing.Lock()
-    lock2 = multiprocessing.Lock()
-
-    # Instantiate 2 Steppers:
-    m1 = Stepper(s, lock1)
-    m2 = Stepper(s, lock2)
-
-   # Test for part 3 running both motors with goAngle at same time
-    m1.zero()
-    m2.zero()
-
-   
-    m1.goAngle(90)
-    m1.goAngle(-45)
-
-    m2.goAngle(-90)
-    m2.goAngle(45)
-
-    m1.goAngle(-135)
-    m1.goAngle(135)
-    m1.goAngle(0)
-
-    # If separate multiprocessing.lock objects are used, the second motor
-    # will run in parallel with the first motor:
-    
-    
- 
-    # While the motors are running in their separate processes, the main
-    # code can continue doing its thing: 
-    try:
-        while True:
-            pass
-    except:
-
-        print('\nend')
