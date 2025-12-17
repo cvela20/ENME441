@@ -504,7 +504,7 @@ def serve_web_page():
 
 
                     m1.goAngle(theta_deg_target)
-                    m2.goAngle((phi_deg_target))
+                    m2.goAngle(-(phi_deg_target))
 
                     GPIO.output(laser_pin, GPIO.HIGH)
                     time.sleep(3)
