@@ -515,6 +515,9 @@ def serve_web_page():
                     GPIO.output(laser_pin, GPIO.LOW)
                     time.sleep(0.5)
 
+                  m1.zero()
+                  m2.zero()
+
 
 
 
